@@ -1,8 +1,11 @@
 const glob = require("glob");
 
+const isProduction = process.env.NODE_ENV == "production";
+
 module.exports = {
   default: {
-    mode: "production",
+    mode: isProduction ? "production" : "development",
+    devtool: isProduction ? undefined : "source-map",
     entry: "dist/client/js/index.js",
     output: {
       filename: "bundle.js",
