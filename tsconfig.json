@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": false,
+    "sourceMap": false,
+    "rootDir": "src",
+    "baseUrl": "src",
+    "outDir": "dist",
+    "esModuleInterop": true
+  },
+  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "*.js", "dist", "**/example", "*.ts"]
+}
