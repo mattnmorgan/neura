@@ -3,10 +3,34 @@ import { createAdapter } from "@socket.io/cluster-adapter";
 import { default as GlobalServer } from "./server";
 import SocketEndpoint from "./socket-endpoint";
 
+export type EmitConfig = {
+  /**
+   * Is the emission volatile (should it be cached for reconnections)
+   */
+  volatile?: boolean;
+  /**
+   * Is there a timeout on the emission to receive a response
+   */
+  timeout?: number;
+  /**
+   * Callback on a response being received or an error occuring. Only specify
+   * a callback if a timeout is also being provided
+   *
+   * @param error Error information
+   * @param response Response information from clients
+   */
+  onResponse: (error?: object, response?: object[]) => Promise<void>;
+};
+
 export default class SocketServer {
   private ioServer: SocketIoServer;
 
   private globalServer: GlobalServer;
+
+  /**
+   * Connections to this server from clients, and the data associated with them
+   */
+  private connections: Map<Socket, object>;
 
   /**
    * Collection of endpoints supported by the server
@@ -32,6 +56,7 @@ export default class SocketServer {
   public constructor(server: GlobalServer) {
     this.globalServer = server;
     this.endpoints = [];
+    this.connections = new Map<Socket, object>();
     this.onFailedRecovery = async () => {};
     this.onSuccessfulRecovery = async () => {};
   }
@@ -43,6 +68,8 @@ export default class SocketServer {
     });
 
     this.ioServer.on("connection", async (socket) => {
+      this.connections.set(socket, {});
+
       // For each endpoint, register it to be executed via socketio
       this.endpoints.forEach((endpoint) => {
         socket.on(endpoint.name, async (...args) => {
@@ -54,12 +81,46 @@ export default class SocketServer {
         });
       });
 
+      socket.on("disconnect", () => {
+        this.connections.delete(socket);
+      });
+
       if (!socket.recovered) {
         this.onFailedRecovery(this.globalServer, socket);
       } else {
         this.onSuccessfulRecovery(this.globalServer, socket);
       }
     });
+  }
+
+  /**
+   * Emits an event over socket io
+   *
+   * @param config Configuration for the emission
+   * @param event Event name to emit
+   * @param args Arguments to pass with the event
+   */
+  public async emit(
+    config: EmitConfig,
+    event: string,
+    ...args: any
+  ): Promise<void> {
+    let emitter: any = this.server;
+    let emitArgs: any[] = args;
+
+    if (config?.volatile ?? false) {
+      emitter = emitter.volatile;
+    }
+
+    if (config?.timeout) {
+      emitter = emitter.timeout(config.timeout);
+    }
+
+    if (config?.onResponse) {
+      emitArgs.push(config.onResponse);
+    }
+
+    emitter.emit(event, ...emitArgs);
   }
 
   /**

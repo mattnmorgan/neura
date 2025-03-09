@@ -1,4 +1,4 @@
-import Server from "./server";
+import { Socket } from "socket.io-client";
 
 type Endpoint = {
   /**
@@ -8,16 +8,12 @@ type Endpoint = {
   /**
    * Execution method for a socket io endpoint
    *
-   * @param server Server connection
+   * @param socket Socket connection
    * @param respond Callback method to call after handling message to acknowledge receipt
    * @param args Arguments passed to the socket endpoint
    * @returns
    */
-  execute: (
-    server: Server,
-    respond: (response?: object) => void,
-    ...args: any
-  ) => Promise<void>;
+  execute: (connection: Socket, respond: (response?: object) => void, ...args: any) => Promise<void>;
 };
 
 export default Endpoint;

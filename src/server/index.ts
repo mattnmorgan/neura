@@ -19,9 +19,22 @@ new Server(8080, 1)
     {
       name: "test",
       execute: async (server, callback, text) => {
-        console.log(text);
-        console.log("yep");
-        callback();
+        console.log("message:", text);
+        server.socketServer.emit(
+          {
+            timeout: 1000,
+            onResponse: async (error, response) => {
+              console.log(
+                "response received to start's response",
+                JSON.stringify(error),
+                JSON.stringify(response)
+              );
+            },
+          },
+          "test",
+          "a response"
+        );
+        callback({ banana: true });
       },
     },
   ])

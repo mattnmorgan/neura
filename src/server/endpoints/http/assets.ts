@@ -16,6 +16,15 @@ const endpoint: RouterEndpoint = {
 
         if (fs.existsSync(path) && !path.endsWith(".html")) {
           response.setHeader("Content-Type", mime.lookup(path));
+
+          if (response.getHeader("Content-Type") == "application/javascript") {
+            const mapPath = path + ".map";
+
+            if (fs.existsSync(mapPath)) {
+              response.setHeader("SourceMap", `/assets${request.path}.map`);
+            }
+          }
+
           response.sendFile(path);
         } else {
           response.statusCode = 404;
