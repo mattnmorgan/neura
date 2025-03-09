@@ -2,6 +2,10 @@ import Server from "./server";
 import { Request, Response } from "express";
 
 type Endpoint = {
+  /**
+   * The route for this endpoint, which can include parameters using `:` as defined in
+   * express documentation
+   */
   route: RegExp | string;
   get?: (server: Server, request: Request, response: Response) => Promise<void>;
   head?: (
@@ -43,7 +47,13 @@ type Endpoint = {
 };
 
 type RouterEndpoint = {
+  /**
+   * The route that this router handles
+   */
   route: string | RegExp;
+  /**
+   * The collection of endpoints associated with this router
+   */
   endpoints: Endpoint[];
 };
 

@@ -46,7 +46,11 @@ export default class SocketServer {
       // For each endpoint, register it to be executed via socketio
       this.endpoints.forEach((endpoint) => {
         socket.on(endpoint.name, async (...args) => {
-          endpoint.execute(this.globalServer, ...args);
+          endpoint.execute(
+            this.globalServer,
+            args[args.length - 1],
+            ...args.slice(0, args.length - 1)
+          );
         });
       });
 

@@ -3,6 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <title>Example</title>
+
+    <script type="module" src="/assets/js/bundle.js"></script>
+    <script type="module" src="/assets/lib/socket-io/socket.io.min.js"></script>
+
+    <script type="module">
+      const socket = io({ ackTimeout: 10000, retries: 3, auth: {} });
+
+      socket.emit("test", "a message");
+    </script>
   </head>
   <body>
     Body

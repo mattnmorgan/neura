@@ -18,8 +18,10 @@ new Server(8080, 1)
   .addSocketRoutes([
     {
       name: "test",
-      execute: async (server) => {
+      execute: async (server, callback, text) => {
+        console.log(text);
         console.log("yep");
+        callback();
       },
     },
   ])

@@ -1,5 +1,6 @@
 import { RouterEndpoint } from "../../http-endpoint";
 import fs from "fs";
+import mime from "mime-types";
 
 /**
  * Endpoint that fetches any asset in the client directory, excepting
@@ -14,6 +15,7 @@ const endpoint: RouterEndpoint = {
         const path = `${process.cwd()}/dist/client/${request.path}`;
 
         if (fs.existsSync(path) && !path.endsWith(".html")) {
+          response.setHeader("Content-Type", mime.lookup(path));
           response.sendFile(path);
         } else {
           response.statusCode = 404;

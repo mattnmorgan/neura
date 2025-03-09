@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "esModuleInterop": true,
+    "noEmit": false,
+    "sourceMap": false,
+    "outDir": "",
+    "rootDir": "",
+    "baseUrl": "",
+    "moduleResolution": "nodenext",
+    "module": "NodeNext"
+  },
+  "include": ["gulpfile.ts"],
+  "exclude": []
+}
