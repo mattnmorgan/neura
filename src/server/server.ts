@@ -47,7 +47,7 @@ export default class Server {
     this.socketServer = new SocketServer(this);
   }
 
-  public async launch(): Promise<void> {
+  public async launch(): Promise<Server> {
     if (cluster.isPrimary) {
       const cpus = availableParallelism();
 
@@ -63,6 +63,8 @@ export default class Server {
       await this.httpServer.initialize();
       await this.socketServer.initialize();
     }
+
+    return this;
   }
 
   /**
