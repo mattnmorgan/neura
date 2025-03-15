@@ -1,3 +1,5 @@
+export * from "@shoelace-style/shoelace/dist/shoelace.js";
+
 import SocketClient from "./socket-client";
 
 let socket: SocketClient = new SocketClient({}).registerEndpoints([
@@ -21,5 +23,3 @@ socket.initialize().then(() => {
     "a start"
   );
 });
-
-export { default as BsNavbar } from "./elements/bootstrap/BsNavbar/BsNavbar";

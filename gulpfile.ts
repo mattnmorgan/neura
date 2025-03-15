@@ -11,16 +11,9 @@ function cleanDist(cb) {
   cb();
 }
 
-function buildLibBootstrap() {
-  return src([
-    "node_modules/bootstrap/dist/css/*.min.css",
-    "node_modules/bootstrap/dist/js/*.min.js",
-  ]).pipe(dest("dist/client/lib/bootstrap/"));
-}
-
-function buildLibSocketIo() {
-  return src(["node_modules/socket.io-client/dist/*.min.js"]).pipe(
-    dest("dist/client/lib/socket-io/")
+function buildLibShoelace() {
+  return src(["node_modules/@shoelace-style/shoelace/dist/**/*.css"]).pipe(
+    dest("dist/client/lib/shoelace")
   );
 }
 
@@ -57,7 +50,7 @@ function buildTypescript() {
               "`" + readFileSync(htmlPath).toString().trim() + "`";
 
             if (new RegExp(`class\\s+${className}`).test(code)) {
-              code += `\nimport { html } from "lit";\nObject.defineProperty(${className}.prototype, 'template', { get: function() { return html${html}; }, configurable: false, enumerable: true });`;
+              code += `\nimport { html as _html } from "lit";\nObject.defineProperty(${className}.prototype, 'template', { get: function() { return _html${html}; }, configurable: false, enumerable: true });`;
               chunk._contents = Buffer.from(new TextEncoder().encode(code));
               console.log("Success: " + htmlPath.substring(cwd.length));
             } else {
@@ -123,8 +116,7 @@ function cleanTypescript(cb) {
 
 const build = series(
   cleanDist,
-  buildLibBootstrap,
-  buildLibSocketIo,
+  buildLibShoelace,
   buildStatic,
   buildTypescript,
   packTypescript,

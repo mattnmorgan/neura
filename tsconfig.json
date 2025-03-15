@@ -9,7 +9,9 @@
     "esModuleInterop": true,
     "target": "ES6",
     "module": "CommonJS",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
   },
   "include": [
     "**/*.js",
