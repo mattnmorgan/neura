@@ -1,4 +1,4 @@
-import { RouterEndpoint } from "../../http-endpoint";
+import { RouterEndpoint } from "./http-endpoint";
 import fs from "fs";
 import mime from "mime-types";
 

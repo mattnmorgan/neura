@@ -6,8 +6,17 @@
     "rootDir": "src",
     "baseUrl": "src",
     "outDir": "dist",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "node"
   },
-  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "webpack.config.js"
+  ],
   "exclude": ["node_modules", "*.js", "dist", "**/example", "*.ts"]
 }

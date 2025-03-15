@@ -1,8 +1,9 @@
 import { src, dest, series, watch } from "gulp";
 import ts from "gulp-typescript";
 import webpackstream from "webpack-stream";
-import { rmSync } from "fs";
+import { rmSync, existsSync, readFileSync } from "fs";
 import { sync } from "glob";
+import through from "through2";
 
 function cleanDist(cb) {
   rmSync("dist/client", { recursive: true, force: true });
@@ -31,7 +32,55 @@ function buildStatic() {
 
 function buildTypescript() {
   const project = ts.createProject("tsconfig.json");
-  return project.src().pipe(project()).js.pipe(dest("dist/"));
+  return project
+    .src()
+    .pipe(
+      through.obj((chunk, enc, cb) => {
+        const cwd = chunk.cwd.replaceAll("\\", "/");
+        const chunkPath: string[] = chunk.path.replaceAll("\\", "/").split("/");
+        const chunkDir = chunkPath.slice(0, chunkPath.length - 1).join("/");
+        const htmlPath =
+          chunkDir +
+          "/" +
+          chunkPath[chunkPath.length - 1].replace(".ts", ".html");
+
+        if (/src\/.*?\/elements\/?.*?/.test(chunkDir)) {
+          if (existsSync(htmlPath)) {
+            const className: string = chunkPath[chunkPath.length - 1].replace(
+              ".ts",
+              ""
+            );
+            let code: string = new TextDecoder("UTF-8").decode(
+              Buffer.from(chunk._contents)
+            );
+            let html: string =
+              "`" + readFileSync(htmlPath).toString().trim() + "`";
+
+            if (new RegExp(`class\\s+${className}`).test(code)) {
+              code += `\nimport { html } from "lit";\nObject.defineProperty(${className}.prototype, 'template', { get: function() { return html${html}; }, configurable: false, enumerable: true });`;
+              chunk._contents = Buffer.from(new TextEncoder().encode(code));
+              console.log("Success: " + htmlPath.substring(cwd.length));
+            } else {
+              console.warn(
+                `Invalid class declaration for injecting template "${htmlPath.substring(
+                  cwd.length
+                )}"`
+              );
+            }
+          } else {
+            console.warn(
+              `No template found for element at "${htmlPath.substring(
+                cwd.length
+              )}"`
+            );
+          }
+        }
+
+        cb(null, chunk);
+      })
+    )
+    .pipe(project())
+    .js.pipe(dest("dist/"));
 }
 
 function packTypescript() {

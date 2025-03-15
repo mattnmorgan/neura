@@ -1,7 +1,7 @@
 import { default as express, Express } from "express";
 import { createServer, Server } from "node:http";
-import { default as GlobalServer } from "./server";
-import HttpEndpoint, { RouterEndpoint } from "./http-endpoint";
+import { default as GlobalServer } from "../server";
+import HttpEndpoint, { RouterEndpoint } from "./http/http-endpoint";
 
 export default class HttpServer {
   private expressServer: Express;

@@ -1,11 +1,12 @@
 import { default as cluster, Worker } from "node:cluster";
 import { availableParallelism } from "node:os";
 import { setupPrimary } from "@socket.io/cluster-adapter";
-import Connection from "./connection";
-import HttpServer from "./http-server";
-import SocketServer from "./socket-server";
-import HttpEndpoint, { RouterEndpoint } from "./http-endpoint";
-import SocketEndpoint from "./socket-endpoint";
+import { authenticator, totp, hotp } from "otplib";
+import Connection from "./database/connection";
+import HttpServer from "./endpoints/http-server";
+import SocketServer from "./endpoints/socket-server";
+import HttpEndpoint, { RouterEndpoint } from "./endpoints/http/http-endpoint";
+import SocketEndpoint from "./endpoints/socket-io/socket-endpoint";
 
 export default class Server {
   /**
@@ -154,5 +155,33 @@ export default class Server {
   public addRouters(endpoints: RouterEndpoint[]): this {
     endpoints.forEach((endpoint) => this.addRouter(endpoint));
     return this;
+  }
+
+  /**
+   * Authenticate a user
+   *
+   * @param algorithm Algorithm to use
+   * @param token Token to test
+   * @param secret Secret for the user to authenticate
+   * @param counter Counter (required for hotp)
+   * @returns True if the token, secret, and counter match against the algorithm provided
+   */
+  public authorize(
+    algorithm: "auth" | "totp" | "hotp",
+    token: string,
+    secret: string,
+    counter?: number
+  ): boolean {
+    switch (algorithm) {
+      case "auth":
+        return authenticator.verify({ token, secret });
+      case "totp":
+        return totp.verify({ token, secret });
+      case "hotp":
+        if (!counter) {
+          return false;
+        }
+        return hotp.verify({ token, secret, counter });
+    }
   }
 }

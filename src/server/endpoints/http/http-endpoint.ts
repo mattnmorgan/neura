@@ -1,4 +1,4 @@
-import Server from "./server";
+import Server from "../../server";
 import { Request, Response } from "express";
 
 type Endpoint = {

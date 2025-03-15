@@ -1,5 +1,5 @@
 import Server from "./server";
-import { default as SQLiteConnector } from "./sqlite-connection";
+import { default as SQLiteConnector } from "./database/sqlite-connection";
 import AssetsEndpoint from "./endpoints/http/assets";
 import PageEndpoint from "./endpoints/http/pages";
 

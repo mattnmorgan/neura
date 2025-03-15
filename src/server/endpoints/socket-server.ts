@@ -1,7 +1,7 @@
 import { Server as SocketIoServer, Socket } from "socket.io";
 import { createAdapter } from "@socket.io/cluster-adapter";
-import { default as GlobalServer } from "./server";
-import SocketEndpoint from "./socket-endpoint";
+import { default as GlobalServer } from "../server";
+import SocketEndpoint from "./socket-io/socket-endpoint";
 
 export type EmitConfig = {
   /**

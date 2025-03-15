@@ -21,3 +21,5 @@ socket.initialize().then(() => {
     "a start"
   );
 });
+
+export { default as BsNavbar } from "./elements/bootstrap/BsNavbar/BsNavbar";
