@@ -7,9 +7,14 @@
     <script type="module" src="/assets/js/bundle.js"></script>
     <link rel="stylesheet" href="/assets/lib/shoelace/themes/dark.css" />
     <link rel="stylesheet" href="/assets/lib/shoelace/themes/light.css" />
+    <link rel="stylesheet" href="/assets/lib/tailwind/styles.css" />
   </head>
-  <body>
-    Body
+  <body class="sl-theme-dark">
+    <div class="bg-sky-500 grid grid-flow-col grid-rows-3 gap-4">
+      <div class="row-span-3">1</div>
+      <div class="col-span-2">2</div>
+      <div class="col-span-2 row-span-2">3</div>
+    </div>
     <sl-button>Button</sl-button>
   </body>
 </html>

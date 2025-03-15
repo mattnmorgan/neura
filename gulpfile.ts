@@ -4,6 +4,7 @@ import webpackstream from "webpack-stream";
 import { rmSync, existsSync, readFileSync } from "fs";
 import { sync } from "glob";
 import through from "through2";
+import { execSync } from "child_process";
 
 function cleanDist(cb) {
   rmSync("dist/client", { recursive: true, force: true });
@@ -17,8 +18,13 @@ function buildLibShoelace() {
   );
 }
 
+function buildLibTailwind(cb) {
+  execSync("npm run tailwind:compile");
+  cb();
+}
+
 function buildStatic() {
-  return src(["src/client/", "src/client/**/*.!(ts)"]).pipe(
+  return src(["src/client/", "src/client/**/*.!(ts|css)"]).pipe(
     dest("dist/client/")
   );
 }
@@ -117,6 +123,7 @@ function cleanTypescript(cb) {
 const build = series(
   cleanDist,
   buildLibShoelace,
+  buildLibTailwind,
   buildStatic,
   buildTypescript,
   packTypescript,
