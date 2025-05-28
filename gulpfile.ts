@@ -43,6 +43,7 @@ function buildTypescript() {
           "/" +
           chunkPath[chunkPath.length - 1].replace(".ts", ".html");
 
+        // Test: Custom lit html element definitions
         if (/src\/.*?\/elements\/?.*?/.test(chunkDir)) {
           if (existsSync(htmlPath)) {
             const className: string = chunkPath[chunkPath.length - 1].replace(

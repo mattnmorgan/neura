@@ -1,3 +1,6 @@
+import { createRoot, Root } from "react-dom/client";
+import React from "react";
+
 /**
  * Generates a random number
  *
@@ -28,4 +31,23 @@ export function generateString(length: number, allowed?: RegExp): string {
   }
 
   return chars.join("");
+}
+
+/**
+ * @param elementId Id of the container element to attach to
+ * @param node Node to attach to the container
+ * @returns The root element
+ */
+export function attachReact(elementId: string, node: React.ReactNode): Root {
+  const container = document.getElementById(elementId);
+
+  if (!container) {
+    throw new Error(
+      `Could not find container element with the id "${elementId}"`
+    );
+  }
+
+  const root = createRoot(container);
+  root.render(node);
+  return root;
 }

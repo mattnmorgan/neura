@@ -1,6 +1,8 @@
 export * from "@shoelace-style/shoelace/dist/shoelace.js";
 
 import SocketClient from "./socket-client";
+import { attachReact } from "../../utilities/utilities";
+import NeuraApp from "./components/neura-app";
 
 let socket: SocketClient = new SocketClient({}).registerEndpoints([
   {
@@ -12,6 +14,7 @@ let socket: SocketClient = new SocketClient({}).registerEndpoints([
   },
 ]);
 
+// Test emission
 socket.initialize().then(() => {
   socket.emit(
     {
@@ -23,3 +26,6 @@ socket.initialize().then(() => {
     "a start"
   );
 });
+
+// Attach react
+attachReact("neura-app", <NeuraApp name="Juicy Fruit" />);

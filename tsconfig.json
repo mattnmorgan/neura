@@ -11,7 +11,8 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "jsx": "react-jsx"
   },
   "include": [
     "**/*.js",
